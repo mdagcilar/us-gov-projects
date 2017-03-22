@@ -1,0 +1,54 @@
+path { 
+    stroke: steelblue;
+    stroke-width: 2;
+    fill: none;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: grey;
+    stroke-width: 1;
+    shape-rendering: crispEdges;
+}
+h1{
+    font-family: "Arial Black", Gadget, sans-serif;
+	text-align: center;
+	margin-top: 40px;
+}
+h2{
+    font-family: "Arial Black", Gadget, sans-serif;
+    font-size: 14px;
+    text-align: center;
+    margin-top: -10px;
+    font-weight:normal
+}
+
+
+body{
+    font-family: "Arial Black", Gadget, sans-serif;
+    text-align: center;
+}
+
+
+p{
+    text-align: center;
+    padding-bottom: 10%;
+    padding-left: 10%;
+    padding-right: 10%;
+    padding-top: 5%;
+}
+
+.header{
+    width: 100.8%;
+    background-color: rgb(63,96,127);
+    height: 100px;
+    margin-top: -10px;
+    margin-left: -10px;
+     }
+
+
+line {
+    stroke: #000;
+    stroke-width: 1.px;
+}
