@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Dataset Errors</title>
+
+	<!-- css -->
+	<link href="css/styles.css" rel="stylesheet">
+</head>
+<body>
+	<h3>List of dataset errors</h3>
+	
+
+	
+
+<div>
+	<p>
+	To identify errors in the dataset. First the data was analysed in Excel to visualise and correct the data entry issues mentioned in section 1 below. Next, the dataset was imported into OpenRefine where all the others issues below are detailed (2,3,4,5).
+	
+	<br><br>
+	1- Data Entry
+		- Incorrect data input, the cells in the dataset (180 - 454) were shifted to the right by 5 cells and didn't align with the correct columns. So to fix this, simply shifted them back.
+		- The value of 'Agency Project ID' had been split into the column next to it 'Project Name'. Therefore, this error shifted all the others columns over by one. To fix this, manually appended the divided field and the shifted the remaining cells. This happened twice within the dataset.
+	<br>
+	<br>
+	2- Inconsistencies
+		- Text transform, trimmed the leading and trailing white space in all columns.
+		- Spelling inconcistencies in 'Agency Name' and 'Project Description'
+			Googlerefine's TextFacet feature helps you find groups of different cell values that might have alternative representations of the same thing. For example, the two strings "Department of Agriculture" and "Department of Agraculture" are very likely to refer to the same identifier and just have spelling differences. The text facet clustering grouped similar things together and the ones that couldn't be clustered together were manually edited to also be in the same group. For example DoL -> Department of Labour.
+	<br>
+	<br>
+	3- Date Types
+		- 'Completion Date (B1)' column first entry was not in the correct Date format '2012-30-09'. Fixed by changing the datatype from Text -> Date in openrefine
+		- 'Updated Date' column contained a Date entry as a Text data type instead of Date type. Changed Text - > Date
+		- 'Updated Time' Date format '1899-05-31T10:22:25Z' included year-month-day, needed to convert to just include the time. So i used the substring method to extract the correct string that included the time.
+	<br>
+	<br>
+	4- 'Life Cycle Cost' found numeric data stored as text, changed data type to numerical.
+
+	<br>
+	<br>
+	5- Random rows with 'Total' inserted in the 'Unique_Investment_Identifier' column which were summing up 'Lifecycle_Cost','Schedule_Variance_days','Schedule_Variance_percentage','Cost_Variance_dollar_M',	'Cost_Variance_percentage',	'Planned_Cost_dollar_M' and	'Projected_slash_Actual_Cost_dollar_M'. This is an unnecessary calculation and is performed in the wrong place. It this was required it would have to be it's own column. Therefore, all of these rows were removed. 
+	</p>
+
+	<p>
+		Below is a link to be able to download the dataset.
+	</p>
+	<form method="get" action="../resources/usopendata.csv">
+		<button type="submit">Download csv data!</button>
+	</form>
+	</div>
+
+	
+	
+	
+</body>
