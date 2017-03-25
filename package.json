@@ -1,0 +1,9 @@
+{
+  "name": "us-opendata cwk1",
+  "version": "0.1.0",
+  "keywords": [],
+  "dependencies": {
+    "jquery": "latest",
+    "bootstrap" : "latest"
+  }
+}
