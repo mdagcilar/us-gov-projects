@@ -4,16 +4,48 @@
 	<meta charset="utf-8">
 	<title>Dataset Errors</title>
 
+
+    <!-- jquery Core JavaScript -->
+    <script src="../node_modules/jquery/dist/jquery.js"></script>.
+
+	<!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+	<!-- Bootstrap Core JavaScript -->
+    <script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <!-- D3 Scripts -->
+	<script src="../js/libs/d3.v4.min.js" charset="utf-8"></script>
+
+	
 	<!-- css -->
-	<link href="css/styles.css" rel="stylesheet">
+	<link href="../css/secondary.css" rel="stylesheet">
+
+	<div class="header"></div>
 </head>
+
+
 <body>
+	<nav class="navbar navbar-default">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="../../">Home</a>
+			</div>
+			<ul class="nav navbar-nav">
+				<li class="active"><a href="">List of dataset errors</a></li>
+				<li><a href="visual1.html">Visualisation 1</a></li>
+				<li><a href="visual2.html">Visualisation 2</a></li>
+			</ul>
+		</div>
+	</nav>
+
 	<h3>List of dataset errors</h3>
 	
 
 	
 
-<div>
+<div class="textcontainer">
+	<br>
 	<p>
 	To identify errors in the dataset. First the data was analysed in Excel to visualise and correct the data entry issues mentioned in section 1 below. Next, the dataset was imported into OpenRefine where all the others issues below are detailed (2,3,4,5).
 	
@@ -39,18 +71,16 @@
 
 	<br>
 	<br>
-	5- Random rows with 'Total' inserted in the 'Unique_Investment_Identifier' column which were summing up 'Lifecycle_Cost','Schedule_Variance_days','Schedule_Variance_percentage','Cost_Variance_dollar_M',	'Cost_Variance_percentage',	'Planned_Cost_dollar_M' and	'Projected_slash_Actual_Cost_dollar_M'. This is an unnecessary calculation and is performed in the wrong place. It this was required it would have to be it's own column. Therefore, all of these rows were removed. 
+	5- Random rows with 'Total' inserted in the 'Unique_Investment_Identifier' column which were summing up 'Lifecycle_Cost', 'Schedule_Variance_days', 'Schedule_Variance_percentage', 'Cost_Variance_dollar_M', 'Cost_Variance_percentage', 'Planned_Cost_dollar_M' and 'Projected_slash_Actual_Cost_dollar_M'. This is an unnecessary calculation and is performed in the wrong place. It this was required it would have to be it's own column. Therefore, all of these rows were removed. 
 	</p>
 
 	<p>
-		Below is a link to be able to download the dataset.
+		Below is a link to be able to download the cleaned dataset which has all of these transformation applied to it:
 	</p>
 	<form method="get" action="../resources/usopendata.csv">
-		<button type="submit">Download csv data!</button>
+		<button type="button" class="btn btn-primary">Download csv data</button>
 	</form>
 	</div>
-
-	
 	
 	
 </body>
