@@ -1,3 +1,9 @@
+/*
+* Chart2.js
+*
+*
+*/
+
   /*
   Visual #1 
 
@@ -49,7 +55,6 @@ Calculate the difference between these two dates:
       width = 810 - margin.left - margin.right,   //width of svg
       height = 440 - margin.top - margin.bottom;  //height of svg
       padding = 70;
-      radius = Math.min(width, height) / 2;     
 
 
   // var data = [
