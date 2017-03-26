@@ -28,114 +28,21 @@
     .outerRadius(radius - 40)
     .innerRadius(radius - 40);
 
-  
-
-
-  /*
-  Visual #1
-
-  Which agencies completed their projects in their estimated time.
-
-Chart:
-  Bar chart
-  Pie chart
-  Line chart
-
-Data:
-  Agency_Name
-
-Calculate the difference between these two dates:
-  Javascript
-  Excel
-    Planned_Project_Completion_Date_B2
-    Projected_Actual_Project_Completion_Date_B2
-
-    negative values - Finished early
-    0 - on time
-    positive - Late
-
-
-
-
-  Visual #2 
-
-  Agency_Name
-  
-  Planned_Project_Completion_Date_B2
-  Projected_Actual_Project_Completion_Date_B2
-
-  Planned_Cost_dollar_M
-  Lifecycle_Cost
-
-  Start_Date
-  Completion_Date_B1 
-
-  */
-
-
-  function groupProjectDelayed(d) {
-    if(d.Project_isDelayed > 0){
-        console.log("d");
-        return 1;
-      }else if(d.Project_isDelayed < 0){
-        return -1;
-      }else{
-        return 0;
-      }
-  }
-
-  // function cleanAgencyNames(d){
-  //   rData [];
-
-  //   for(var i=0; i<d.length; i++){
-  //     lookUp = d[i].Agency_Name;
-
-  //     if(rData.indexOf(lookUp) > -1){
-  //       rData.indexOf(d[i].Agency_Name)
-  //     }else{
-  //       rData = {"Agency_Name" : rData[i].Project_isDelayed, "Project_isDelayed" : rData[i].Project_isDelayed, "Count" : 1};
-  //     }
-
-  //   }
-
-
-  //   return returnedData;
-  // }
 
   // Get the data
-  d3.csv("resources/usopendata_visual1.csv", function(error, data) {
+  d3.csv("../resources/usopendata.csv", function(error, data) {
     //throw error
     if(error) throw error;
 
-    // parse the data
     data.forEach(function(d) {
       Agency_Name = d.Agency_Name;
-      Project_isDelayed = groupProjectDelayed(d);
+      Investment_Title = d.Investment_Title;
+      Project_Name = d.Project_Name;
+      Projected_slash_Actual_Cost_dollar_M  = + d.Projected_slash_Actual_Cost_dollar_M;
     });
-
-    //data = cleanAgencyNames(data);
-
     console.log(data[1]);
 
   
-    var pie = d3.pie()
-    .sort(null)
-    .value(function(d) {return d.Project_isDelayed} );
-
-    var svg = d3.select("body").append("svg")
-      .attr("width", width)
-      .attr("height", height)
-      .append("g")
-      .attr("transform", "translate(" + width / 2 + ", " + height / 2 + ")")
-
-    var g = svg.selectAll(".arc")
-      .data(pie(data))
-      .enter().append("g")
-      .attr("class", "arc");
-
-    g.append("path")
-        .attr("d", arc)
-        .style("fill", function(d) { return color(d.data.Project_isDelayed); });
 
 
   });

@@ -7,7 +7,6 @@
 h3{
     font-family: "Helvetica", Gadget, sans-serif;
     text-align: left;
-    margin-top: -10px;
     margin-left: 2%;
     font-weight:normal
 }
@@ -21,4 +20,8 @@ p{
 
 .textcontainer{
 	margin-left: 8%;
+}
+body{
+    font-family: "Helvetica", Gadget, sans-serif;
+    text-align: center;
 }

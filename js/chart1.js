@@ -1,7 +1,49 @@
-/**
- *
- * 
- */
+  /*
+  Visual #1 
+
+  Visualisation is a Weighted Tree which starts from a single parent node.
+   Clicking on parent node will show all the AGENCIES as child node. Clicking
+    on child node will show all their project INVESTMENT TITLE as another child 
+    node and further clicking on each child node will show PROJECT TITLE as leaf node.
+     Each node will show budget being allocated as it expands. It sums up the budget
+      and uses thicker link to represent bigger budgets and vice versa. Different colours
+       are being used to represent each individual agency.
+
+  Agency_Name
+  
+  Planned_Project_Completion_Date_B2
+  Projected_Actual_Project_Completion_Date_B2
+
+  Planned_Cost_dollar_M
+  Lifecycle_Cost
+
+  Start_Date
+  Completion_Date_B1 
+
+    Visual #2
+
+  Which agencies completed their projects in their estimated time.
+
+Chart:
+  Bar chart
+  Pie chart
+  Line chart
+
+Data:
+  Agency_Name
+
+Calculate the difference between these two dates:
+  Javascript
+  Excel
+    Planned_Project_Completion_Date_B2
+    Projected_Actual_Project_Completion_Date_B2
+
+    negative values - Finished early
+    0 - on time
+    positive - Late
+
+  */
+
 
   var margin = {top: 30, right: 60, bottom: 30, left: 60},
       width = 810 - margin.left - margin.right,   //width of svg
@@ -29,48 +71,17 @@
     .innerRadius(radius - 40);
 
   
+  function groupProjectDelayed(d) {
+    if(d.Project_isDelayed > 0){
+        console.log("d");
+        return 1;
+      }else if(d.Project_isDelayed < 0){
+        return -1;
+      }else{
+        return 0;
+      }
+  }
 
-
-  /*
-  Visual #1
-
-  Which agencies completed their projects in their estimated time.
-
-Chart:
-  Bar chart
-  Pie chart
-  Line chart
-
-Data:
-  Agency_Name
-
-Calculate the difference between these two dates:
-  Javascript
-  Excel
-    Planned_Project_Completion_Date_B2
-    Projected_Actual_Project_Completion_Date_B2
-
-    negative values - Finished early
-    0 - on time
-    positive - Late
-
-
-
-
-  Visual #2 
-
-  Agency_Name
-  
-  Planned_Project_Completion_Date_B2
-  Projected_Actual_Project_Completion_Date_B2
-
-  Planned_Cost_dollar_M
-  Lifecycle_Cost
-
-  Start_Date
-  Completion_Date_B1 
-
-  */
 
 
   // Get the data
