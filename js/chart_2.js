@@ -34,8 +34,22 @@ var i = 0,
 // declares a tree layout and assigns the size
 var treemap = d3.tree().size([height, width]);
 
+function collapseAll() {
+	root.children.forEach(collapse);
+	update(root);
+}
 
-d3.csv("../resources/usopendata.csv", function(error, data) {
+//define empty update func
+var update = function update(){
+
+}
+//define collapse update func
+var collapse = function collapse(){
+
+}
+
+
+d3.csv("../resources/usopendata_visual2.csv", function(error, data) {
 	//throw error
 	if(error) throw error;
 
@@ -43,7 +57,7 @@ d3.csv("../resources/usopendata.csv", function(error, data) {
 	  Agency_Name = d.Agency_Name;
 	  Investment_Title = d.Investment_Title;
 	  Project_Name = d.Project_Name;
-	  Projected_slash_Actual_Cost_dollar_M  = + d.Projected_slash_Actual_Cost_dollar_M;
+	  Projected_slash_Actual_Cost_dollar_M  = +d.Projected_slash_Actual_Cost_dollar_M;
 	});
 
 
@@ -57,7 +71,7 @@ d3.csv("../resources/usopendata.csv", function(error, data) {
 
 	console.log(nestedTreeData);
 
-	var treeData = { "name": "Agency", "children":
+	var treeData = { "name": "US Agency", "children":
 		nestedTreeData.values.map( function(major){
 
 			return { "name": major.key, "children": 
@@ -87,7 +101,7 @@ d3.csv("../resources/usopendata.csv", function(error, data) {
 	root.y0 = 0;
 
 	// Collapse the node and all it's children
-	function collapse(d) {
+	collapse = function collapse(d) {
 	  if(d.children) {
 	    d._children = d.children
 	    d._children.forEach(collapse)
@@ -101,7 +115,7 @@ d3.csv("../resources/usopendata.csv", function(error, data) {
 
 	
 
-	function update(source){
+	update = function update(source){
 		// Assigns the x and y position for the nodes
 		var treeData = treemap(root);
 
@@ -124,8 +138,7 @@ d3.csv("../resources/usopendata.csv", function(error, data) {
 		var nodeEnter = node.enter().append('g')
 		  .attr('class', 'node')
 		  .attr("transform", function(d) {
-		    return "translate(" + source.y0 + "," + source.x0 + ")";
-		})
+		    return "translate(" + source.y0 + "," + source.x0 + ")";		})
 		.on('click', click)
 		.on("mouseover", mouseover)
         .on("mousemove", function(d){mousemove(d);})
@@ -149,7 +162,10 @@ d3.csv("../resources/usopendata.csv", function(error, data) {
 		  .attr("text-anchor", function(d) {
 		      return d.children || d._children ? "end" : "start";
 		  })
-		  .text(function(d) { return d.data.name.substring(0,23); });
+		  .text(function(d) {
+		  	if(d.data.name) 
+		  		return d.data.name.substring(0,23); 
+		  });
 
 		// UPDATE
 		var nodeUpdate = nodeEnter.merge(node);
@@ -174,7 +190,7 @@ d3.csv("../resources/usopendata.csv", function(error, data) {
 		var nodeExit = node.exit().transition()
 			.duration(duration)
 			.attr("transform", function(d) {
-		    return "translate(" + source.y + "," + source.x + ")";
+		    	return "translate(" + source.y + "," + source.x + ")";
 			})
 		  	.remove();
 
@@ -252,7 +268,11 @@ d3.csv("../resources/usopendata.csv", function(error, data) {
 		}
 
 
-		//mouse events
+		
+
+		//#################################################################
+		//						mouse event functions
+		//#################################################################
 		function mouseover() {
 	        div.transition()
 	        .duration(300)
@@ -261,7 +281,10 @@ d3.csv("../resources/usopendata.csv", function(error, data) {
 
 	    function mousemove(d) {
 	        div
-	        .text("" + d.data.name)
+	        .text(function(){
+	        	if(d.data.name !=null)
+	        		return d.data.name;
+	        })
 	        .style("left", (d3.event.pageX ) + "px")
 	        .style("top", (d3.event.pageY) + "px");
 	    }
