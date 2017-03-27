@@ -61,7 +61,7 @@ d3.csv("../resources/usopendata_visual2.csv", function(error, data) {
 	});
 
 
-	var nestedTreeData = { "key": "Agency", "values":
+	var nestedTreeData = { "key": "Agency", "section" : "Agency Name", "values":
 	 d3.nest()
 		.key(function(d){ return d.Agency_Name; })
 		.key(function(d){ return d.Investment_Title; })
@@ -71,16 +71,16 @@ d3.csv("../resources/usopendata_visual2.csv", function(error, data) {
 
 	console.log(nestedTreeData);
 
-	var treeData = { "name": "US Agency", "children":
+	var treeData = { "name": "", "section" : "US Agencies", "children":
 		nestedTreeData.values.map( function(major){
 
-			return { "name": major.key, "children": 
+			return { "name": major.key, "section" : "Agency Name", "children": 
 				major.values.map (function(region){
 
-					return { "name": region.key, "children":
+					return { "name": region.key, "section" : "Investment Title", "children":
 						region.values.map(function(country){
 
-							return { "name": country.key, "children": country.values };
+							return { "name": country.key, "section" : "Project Title", "children": country.values };
 
 						})//end of map(function(country){
 					};
@@ -140,9 +140,9 @@ d3.csv("../resources/usopendata_visual2.csv", function(error, data) {
 		  .attr("transform", function(d) {
 		    return "translate(" + source.y0 + "," + source.x0 + ")";		})
 		.on('click', click)
-		.on("mouseover", mouseover)
+		.on("mouseover", function(d){mouseover(d);})
         .on("mousemove", function(d){mousemove(d);})
-        .on("mouseout", mouseout);
+        .on("mouseout", function(d){mouseout(d);})
 
 		// Add Circle for the nodes
 		nodeEnter.append('circle')
@@ -163,8 +163,11 @@ d3.csv("../resources/usopendata_visual2.csv", function(error, data) {
 		      return d.children || d._children ? "end" : "start";
 		  })
 		  .text(function(d) {
-		  	if(d.data.name) 
+		  	if(d.data.section == "US Agencies"){
+		  		return d.data.section; 
+		  	}else{
 		  		return d.data.name.substring(0,23); 
+		  	}
 		  });
 
 		// UPDATE
@@ -258,6 +261,7 @@ d3.csv("../resources/usopendata_visual2.csv", function(error, data) {
 		    d._children = d.children;
 		    d.children = null;
 		  } else {
+		  	console.log("Helo");
 		    d.children = d._children;
 		    d._children = null;
 		  }
@@ -268,33 +272,46 @@ d3.csv("../resources/usopendata_visual2.csv", function(error, data) {
 		}
 
 
-		
+
+		//#########
+		// Calculate Budget
+		//#########
+		function calcBudget(d, str){
+
+		}
+
 
 		//#################################################################
 		//						mouse event functions
 		//#################################################################
-		function mouseover() {
-	        div.transition()
-	        .duration(300)
-	        .style("opacity", 1);
+		function mouseover(d) {
+			if(d.data.section){
+		        div.transition()
+		        .duration(300)
+		        .style("opacity", 1);
+			}
 	    }
 
 	    function mousemove(d) {
 	        div
-	        .text(function(){
-	        	if(d.data.name !=null)
-	        		return d.data.name;
+	        .html(function(){
+	        	if(d.data.section == "US Agencies"){
+	        		return d.data.section;
+	        	}else{
+	        		return (d.data.section + "<br/>" + d.data.name);
+	        	}
 	        })
 	        .style("left", (d3.event.pageX ) + "px")
 	        .style("top", (d3.event.pageY) + "px");
 	    }
 
-	    function mouseout() {
-	        div.transition()
-	        .duration(300)
-	        .style("opacity", 1e-6);
+	    function mouseout(d) {
+	        if(d.data.section){
+		        div.transition()
+		        .duration(300)
+	        	.style("opacity", 1e-6);
+			}
 	    }
-
 
 // End reading csv
 });

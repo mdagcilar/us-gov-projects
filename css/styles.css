@@ -1,5 +1,5 @@
 body{
-    font-family: "Helvetica", Gadget, sans-serif;
+    font-family: "Helvetica", Gadget, sans-serif; 
     text-align: center;
 }
 p{
@@ -12,18 +12,19 @@ h1{
     font-family: "Helvetica", Gadget, sans-serif;
 	text-align: center;
 }
+h3{
+  text-align: left;
+  padding-left: 15%
+}
 .header{
     width: 100%;
     background-color: rgb(63,96,127);
     height: 60px;
 }
-
-
 .arc text {
   font: 10px sans-serif;
   text-anchor: middle;
 }
-
 .arc path {
   stroke: #fff;
 }
