@@ -22,6 +22,11 @@ var svg = d3.select("body").append("svg")
     .attr("transform", "translate("
           + margin.left + "," + margin.top + ")");
 
+// Add tooltip div
+var div = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 1e-6);
+
 var i = 0,
     duration = 750,
     root;
@@ -72,6 +77,7 @@ d3.csv("../resources/usopendata.csv", function(error, data) {
 		})//end of map( function(major)
 	};//end of var declaration
 
+	//TODO remove log 
 	console.log(treeData);
 
 
@@ -113,13 +119,17 @@ d3.csv("../resources/usopendata.csv", function(error, data) {
 		var node = svg.selectAll('g.node')
 		  .data(nodes, function(d) {return d.id || (d.id = ++i); });
 
-		// Enter any new modes at the parent's previous position.
+
+		// Enter any new nodes at the parent's previous position.
 		var nodeEnter = node.enter().append('g')
 		  .attr('class', 'node')
 		  .attr("transform", function(d) {
 		    return "translate(" + source.y0 + "," + source.x0 + ")";
 		})
-		.on('click', click);
+		.on('click', click)
+		.on("mouseover", mouseover)
+        .on("mousemove", function(d){mousemove(d);})
+        .on("mouseout", mouseout);
 
 		// Add Circle for the nodes
 		nodeEnter.append('circle')
@@ -132,14 +142,14 @@ d3.csv("../resources/usopendata.csv", function(error, data) {
 
 		// Add labels for the nodes
 		nodeEnter.append('text')
-		  .attr("dy", ".35em")
+		  .attr("dy", ".120em")
 		  .attr("x", function(d) {
 		      return d.children || d._children ? -13 : 13;
 		  })
 		  .attr("text-anchor", function(d) {
 		      return d.children || d._children ? "end" : "start";
 		  })
-		  .text(function(d) { return d.data.name; });
+		  .text(function(d) { return d.data.name.substring(0,23); });
 
 		// UPDATE
 		var nodeUpdate = nodeEnter.merge(node);
@@ -240,6 +250,27 @@ d3.csv("../resources/usopendata.csv", function(error, data) {
 
 		//end reading update function
 		}
+
+
+		//mouse events
+		function mouseover() {
+	        div.transition()
+	        .duration(300)
+	        .style("opacity", 1);
+	    }
+
+	    function mousemove(d) {
+	        div
+	        .text("" + d.data.name)
+	        .style("left", (d3.event.pageX ) + "px")
+	        .style("top", (d3.event.pageY) + "px");
+	    }
+
+	    function mouseout() {
+	        div.transition()
+	        .duration(300)
+	        .style("opacity", 1e-6);
+	    }
 
 
 // End reading csv

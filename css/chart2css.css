@@ -1,20 +1,33 @@
 .node {
-  cursor: pointer;
+	cursor: pointer;
 }
 
 .node circle {
-  fill: #fff;
-  stroke: steelblue;
-  stroke-width: 1.5px;
+	fill: #fff;
+	stroke: steelblue;
+	stroke-width: 1.5px;
 }
 
 .node text {
-  font: 10px sans-serif;
+	font: 10px Helvetica;
 }
 
 .link {
-  fill: none;
-  stroke: #ccc;
-  stroke-opacity: 0.4;
-  stroke-width: 1.5px;
+	fill: none;
+	stroke: #ccc;
+	stroke-opacity: 0.4;
+	stroke-width: 8px;
+}
+
+div.tooltip {
+	position: absolute;
+	text-align: center;
+	width: 180px;
+	height: 75px;
+	padding: 8px;
+	font: 12px Helvetica;
+	background: #ccc;
+	border: solid 1px #aaa;
+	border-radius: 8px;
+	pointer-events: none;
 }
