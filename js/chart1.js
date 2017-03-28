@@ -4,155 +4,318 @@
 *
 */
 
-  /*
-  Visual #1 
+/*
+############################################
+			Get the csv data
+############################################
+*/
 
-  Visualisation is a Weighted Tree which starts from a single parent node.
-   Clicking on parent node will show all the AGENCIES as child node. Clicking
-    on child node will show all their project INVESTMENT TITLE as another child 
-    node and further clicking on each child node will show PROJECT TITLE as leaf node.
-     Each node will show budget being allocated as it expands. It sums up the budget
-      and uses thicker link to represent bigger budgets and vice versa. Different colours
-       are being used to represent each individual agency.
+// Set the dimensions and margins of the diagram
+var margin = {top: 20, right: 90, bottom: 30, left: 90},
+    width = screen.width -200 - margin.left - margin.right,
+    height = screen.height +75 - margin.top - margin.bottom;
 
-  Agency_Name
-  
-  Planned_Project_Completion_Date_B2
-  Projected_Actual_Project_Completion_Date_B2
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.right + margin.left)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate("
+          + margin.left + "," + margin.top + ")");
 
-  Planned_Cost_dollar_M
-  Lifecycle_Cost
+// Add tooltip div
+var div = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 1e-6);
 
-  Start_Date
-  Completion_Date_B1 
+var i = 0,
+    duration = 750,
+    root;
 
-    Visual #2
+// declares a tree layout and assigns the size
+var treemap = d3.tree().size([height, width]);
 
-  Which agencies completed their projects in their estimated time.
+function collapseAll() {
+	root.children.forEach(collapse);
+	update(root);
+}
 
-Chart:
-  Bar chart
-  Pie chart
-  Line chart
+//define empty update func
+var update = function update(){
 
-Data:
-  Agency_Name
+}
+//define collapse update func
+var collapse = function collapse(){
 
-Calculate the difference between these two dates:
-  Javascript
-  Excel
-    Planned_Project_Completion_Date_B2
-    Projected_Actual_Project_Completion_Date_B2
-
-    negative values - Finished early
-    0 - on time
-    positive - Late
-
-  */
+}
 
 
-  var margin = {top: 30, right: 60, bottom: 30, left: 60},
-      width = 810 - margin.left - margin.right,   //width of svg
-      height = 440 - margin.top - margin.bottom;  //height of svg
-      padding = 70;
+d3.csv("../resources/usopendata_visual1.csv", function(error, data) {
+	//throw error
+	if(error) throw error;
+
+	data.forEach(function(d) {
+	  Agency_Name = d.Agency_Name;
+	  Investment_Title = d.Investment_Title;
+	  Project_Name = d.Project_Name;
+	  Projected_slash_Actual_Cost_dollar_M  = +d.Projected_slash_Actual_Cost_dollar_M;
+	});
 
 
-  // var data = [
-  //   {"Agency_Name": "dol", "Lifecycle_Cost" : 10},
-  //   {"Agency_Name": "dol", "Lifecycle_Cost" : 20},
-  //   {"Agency_Name": "doa", "Lifecycle_Cost" : 50}
-  //   ];
-  // console.log(data);
+	var nestedTreeData = { "key": "Agency", "section" : "Agency Name", "values":
+	 d3.nest()
+		.key(function(d){ return d.Agency_Name; })
+		.key(function(d){ return d.Investment_Title; })
+		.key(function(d){ return d.Project_Name; })
+		.entries(data)
+	};
 
-  var color = d3.scaleOrdinal()
-    .range(["#98abc5", "#8a89a6", "#7b6888"]);
+	console.log(nestedTreeData);
 
-  var arc = d3.arc()
-    .outerRadius(radius - 10)
-    .innerRadius(0);
+	var treeData = { "name": "", "section" : "US Agencies", "children":
+		nestedTreeData.values.map( function(major){
 
-  var labelArc = d3.arc()
-    .outerRadius(radius - 40)
-    .innerRadius(radius - 40);
+			return { "name": major.key, "section" : "Agency Name", "children": 
+				major.values.map (function(region){
 
-  
-  function groupProjectDelayed(d) {
-    if(d.Project_isDelayed > 0){
-        console.log("d");
-        return 1;
-      }else if(d.Project_isDelayed < 0){
-        return -1;
-      }else{
-        return 0;
-      }
-  }
+					return { "name": region.key, "section" : "Investment Title", "children":
+						region.values.map(function(country){
 
+							return { "name": country.key, "section" : "Project Title", "children": country.values };
 
+						})//end of map(function(country){
+					};
 
-  // Get the data
-  d3.csv("../resources/usopendata.csv", function(error, data) {
-    //throw error
-    if(error) throw error;
+				})//end of map (function(region){
+			};
 
-    /*
-    data.forEach(function(d) {
-      Unique_Investment_Identifier = d.Unique_Investment_Identifier;
-      Business_Case_ID = +d.Business_Case_ID;
-      Agency_Code = +d.Agency_Code;
-      Agency_Name = d.Agency_Name;
-      Investment_Title = d.Investment_Title;
-      Project_ID = +d.Project_ID;
-      Agency_Project_ID = d.Agency_Project_ID;
-      Project_Name = d.Project_Name;
-      Project_Description = d.Project_Description;
-      Completion_Date_B1 = new Date(d.Completion_Date_B1);
-      Start_Date = new Date(d.Start_Date);
-      Planned_Project_Completion_Date_B2= new Date(d.Planned_Project_Completion_Date_B2);
-      Projected_Actual_Project_Completion_Date_B2 = new Date(d.Projected_Actual_Project_Completion_Date_B2);
-      Lifecycle_Cost = + d.Lifecycle_Cost;
-      Schedule_Variance_days = + d.Schedule_Variance_days;
-      Schedule_Variance_percentage = + d.Schedule_Variance_percentage;
-      Cost_Variance_dollar_M = + d.Cost_Variance_dollar_M;
-      Cost_Variance_percentage = + d.Cost_Variance_percentage;
-      Planned_Cost_dollar_M  = + d.Planned_Cost_dollar_M;
-      Projected_slash_Actual_Cost_dollar_M  = + d.Projected_slash_Actual_Cost_dollar_M;
-      Updated_Date = new Date(d.Updated_Date);
-      Updated_Time = new Date(d.Updated_Time);
-      Unique_Project_ID = d.Unique_Project_ID;
-    });
-    */
+		})//end of map( function(major)
+	};//end of var declaration
 
-    // parse the data
-    data.forEach(function(d) {
-      Agency_Name = d.Agency_Name;
-      Project_isDelayed = +d.Project_isDelayed;
-      Planned_Project_Completion_Date_B2= new Date(d.Planned_Project_Completion_Date_B2);
-      Projected_Actual_Project_Completion_Date_B2 = new Date(d.Projected_Actual_Project_Completion_Date_B2);
-    });
-
-    console.log(data[1]);
-
-  
-    var pie = d3.pie()
-    .sort(null)
-    .value(function(d) {return d.Lifecycle_Cost;});
-
-    var svg = d3.select("body").append("svg")
-      .attr("width", width)
-      .attr("height", height)
-      .append("g")
-      .attr("transform", "translate(" + width / 2 + ", " + height / 2 + ")")
-
-    var g = svg.selectAll(".arc")
-      .data(pie(data))
-      .enter().append("g")
-      .attr("class", "arc");
-
-    g.append("path")
-        .attr("d", arc)
-        .style("fill", function(d) { return color(d.data.Agency_Name); });
+	//TODO remove log 
+	console.log(treeData);
 
 
-  });
+	// Assigns parent, children, height, depth
+	root = d3.hierarchy(treeData, function(d) { return d.children; });
+	root.x0 = height / 2;
+	root.y0 = 0;
+
+	// Collapse the node and all it's children
+	collapse = function collapse(d) {
+	  if(d.children) {
+	    d._children = d.children
+	    d._children.forEach(collapse)
+	    d.children = null
+	  }
+	}
+
+	// Collapse after the second level
+	root.children.forEach(collapse);
+	update(root);
+
+	
+
+	update = function update(source){
+		// Assigns the x and y position for the nodes
+		var treeData = treemap(root);
+
+		// Compute the new tree layout.
+		var nodes = treeData.descendants(),
+			links = treeData.descendants().slice(1);
+
+		// Normalize for fixed-depth.
+  		nodes.forEach(function(d){ d.y = d.depth * 180});
+
+  		// ########################################################
+  		// ****************** Nodes section ***************************
+
+		// Update the nodes...
+		var node = svg.selectAll('g.node')
+		  .data(nodes, function(d) {return d.id || (d.id = ++i); });
+
+
+		// Enter any new nodes at the parent's previous position.
+		var nodeEnter = node.enter().append('g')
+		  .attr('class', 'node')
+		  .attr("transform", function(d) {
+		    return "translate(" + source.y0 + "," + source.x0 + ")";		})
+		.on('click', click)
+		.on("mouseover", function(d){mouseover(d);})
+        .on("mousemove", function(d){mousemove(d);})
+        .on("mouseout", function(d){mouseout(d);})
+
+		// Add Circle for the nodes
+		nodeEnter.append('circle')
+		  .attr('class', 'node')
+		  .attr('r', 1e-6)
+		  .style("fill", function(d) {
+		      return d._children ? "lightsteelblue" : "#fff";
+		  });
+
+
+		// Add labels for the nodes
+		nodeEnter.append('text')
+		  .attr("dy", ".120em")
+		  .attr("x", function(d) {
+		      return d.children || d._children ? -13 : 13;
+		  })
+		  .attr("text-anchor", function(d) {
+		      return d.children || d._children ? "end" : "start";
+		  })
+		  .text(function(d) {
+		  	if(d.data.section == "US Agencies"){
+		  		return d.data.section; 
+		  	}else{
+		  		return d.data.name.substring(0,23); 
+		  	}
+		  });
+
+		// UPDATE
+		var nodeUpdate = nodeEnter.merge(node);
+
+		// Transition to the proper position for the node
+		nodeUpdate.transition()
+			.duration(duration)
+			.attr("transform", function(d) { 
+		    return "translate(" + d.y + "," + d.x + ")";
+		 });
+
+		// Update the node attributes and style
+		nodeUpdate.select('circle.node')
+			.attr('r', 10)
+			.style("fill", function(d) {
+		    return d._children ? "lightsteelblue" : "#fff";
+		})
+			.attr('cursor', 'pointer');
+
+
+		// Remove any exiting nodes
+		var nodeExit = node.exit().transition()
+			.duration(duration)
+			.attr("transform", function(d) {
+		    	return "translate(" + source.y + "," + source.x + ")";
+			})
+		  	.remove();
+
+		// On exit reduce the node circles size to 0
+		nodeExit.select('circle')
+			.attr('r', 1e-6);
+
+		// On exit reduce the opacity of text labels
+		nodeExit.select('text')
+			.style('fill-opacity', 1e-6);
+
+
+		//########################################################
+		// ****************** links section ***************************
+
+		// Update the links...
+		var link = svg.selectAll('path.link')
+		  .data(links, function(d) { return d.id; });
+
+		// Enter any new links at the parent's previous position.
+		var linkEnter = link.enter().insert('path', "g")
+		  .attr("class", "link")
+		  .attr('d', function(d){
+		    var o = {x: source.x0, y: source.y0}
+		    return diagonal(o, o)
+		  });
+
+		// UPDATE
+		var linkUpdate = linkEnter.merge(link);
+
+		// Transition back to the parent element position
+		linkUpdate.transition()
+		  .duration(duration)
+		  .attr('d', function(d){ return diagonal(d, d.parent) });
+
+		// Remove any exiting links
+		var linkExit = link.exit().transition()
+		  .duration(duration)
+		  .attr('d', function(d) {
+		    var o = {x: source.x, y: source.y}
+		    return diagonal(o, o)
+		  })
+		  .remove();
+
+		// Store the old positions for transition.
+		nodes.forEach(function(d){
+		d.x0 = d.x;
+		d.y0 = d.y;
+		});
+
+		// Creates a curved (diagonal) path from parent to the child nodes
+		function diagonal(s, d) {
+
+		path = `M ${s.y} ${s.x}
+		        C ${(s.y + d.y) / 2} ${s.x},
+		          ${(s.y + d.y) / 2} ${d.x},
+		          ${d.y} ${d.x}`
+
+		return path
+		}
+
+		// Toggle children on click.
+		function click(d) {
+		if (d.children) {
+		    d._children = d.children;
+		    d.children = null;
+		  } else {
+		  	console.log("Helo");
+		    d.children = d._children;
+		    d._children = null;
+		  }
+		update(d);
+		}
+
+		//end reading update function
+		}
+
+
+
+		//#########
+		// Calculate Budget
+		//#########
+		function calcBudget(d, str){
+
+		}
+
+
+		//#################################################################
+		//						mouse event functions
+		//#################################################################
+		function mouseover(d) {
+			if(d.data.section){
+		        div.transition()
+		        .duration(300)
+		        .style("opacity", 1);
+			}
+	    }
+
+	    function mousemove(d) {
+	        div
+	        .html(function(){
+	        	if(d.data.section == "US Agencies"){
+	        		return d.data.section;
+	        	}else{
+	        		return (d.data.section + "<br/>" + d.data.name);
+	        	}
+	        })
+	        .style("left", (d3.event.pageX ) + "px")
+	        .style("top", (d3.event.pageY) + "px");
+	    }
+
+	    function mouseout(d) {
+	        if(d.data.section){
+		        div.transition()
+		        .duration(300)
+	        	.style("opacity", 1e-6);
+			}
+	    }
+
+// End reading csv
+});
+
+
 
 
